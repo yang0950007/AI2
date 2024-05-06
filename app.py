@@ -26,6 +26,10 @@ def handle_form():
     if not id_number[0].isalpha():
         return "Invalid ID number: first character must be an English alphabet", 400
 
+    # Check if the last nine characters are digits
+    if not id_number[1:].isdigit():
+        return "Invalid ID number: last nine characters must be digits", 400
+
     # Validate name (assuming it's alphabetic)
     if not re.match(r'^[A-Za-z\s]+$', name):
         return "Invalid name: must contain only alphabetic characters and spaces", 400
