@@ -22,13 +22,29 @@ def handle_form():
     if len(id_number) != 10:
         return "Invalid ID number: length must be 10", 400
 
-    # Check if the first character is an English alphabet
-    if not id_number[0].isalpha():
+    # Check if the first character is an English alphabet and convert it to corresponding number
+    first_char = id_number[0]
+    if not first_char.isalpha():
         return "Invalid ID number: first character must be an English alphabet", 400
+    else:
+        # Convert the first character to corresponding number
+        first_char_num = ord(first_char.upper()) - 64 + 9  # A is 10, B is 11, ..., Z is 33
 
-    # Check if the last nine characters are digits
-    if not id_number[1:].isdigit():
-        return "Invalid ID number: last nine characters must be digits", 400
+    # Multiply the first digit by 1 and the second digit by 9
+    first_digit = first_char_num // 10
+    second_digit = first_char_num % 10
+    result = first_digit * 1 + second_digit * 9
+
+    # Multiply the third to ninth digits by 8, 7, 6, 5, 4, 3, 2, 1
+    for i in range(2, 10):
+        result += int(id_number[i]) * (10 - i)
+
+    # Add the last digit
+    result += int(id_number[-1])
+
+    # Check if the result is divisible by 10
+    if result % 10 != 0:
+        return "Invalid ID number: check digit does not match", 400
 
     # Validate name (assuming it's alphabetic)
     if not re.match(r'^[A-Za-z\s]+$', name):
