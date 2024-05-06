@@ -15,8 +15,8 @@ def handle_form():
     email = request.form.get('email')
 
     # Validate ID number (assuming it's numeric)
-    if not re.match(r'^\d+$', id_number):
-        return "Invalid ID number", 400
+    if len(id_number) != 10:
+        return "Invalid ID number: length must be 10", 400
 
     # Validate name (assuming it's alphabetic)
     if not re.match(r'^[A-Za-z\s]+$', name):
