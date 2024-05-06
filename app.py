@@ -14,9 +14,9 @@ def handle_form():
     gender = request.form.get('gender')
     email = request.form.get('email')
 
-    # Validate ID number (assuming it's numeric)
-    if not re.match(r'^\d+$', id_number):
-        return "Invalid ID number: must contain only digits", 400
+    # Validate ID number (assuming it's alphanumeric)
+    if not id_number.isalnum():
+        return "Invalid ID number: must contain only alphanumeric characters", 400
 
     # Check ID number length
     if len(id_number) != 10:
@@ -28,7 +28,10 @@ def handle_form():
         return "Invalid ID number: first character must be an English alphabet", 400
     else:
         # Convert the first character to corresponding number
-        first_char_num = ord(first_char.upper()) - 64 + 9  # A is 10, B is 11, ..., Z is 33
+        if first_char.isdigit():
+            first_char_num = int(first_char)
+        else:
+            first_char_num = ord(first_char.upper()) - 64 + 9  # A is 10, B is 11, ..., Z is 33
 
     # Multiply the first digit by 1 and the second digit by 9
     first_digit = first_char_num // 10
@@ -37,7 +40,10 @@ def handle_form():
 
     # Multiply the third to ninth digits by 8, 7, 6, 5, 4, 3, 2, 1
     for i in range(2, 10):
-        result += int(id_number[i]) * (10 - i)
+        if id_number[i].isdigit():
+            result += int(id_number[i]) * (10 - i)
+        else:
+            return "Invalid ID number: digits must be numeric", 400
 
     # Add the last digit
     result += int(id_number[-1])
